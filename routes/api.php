@@ -16,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post("/test", [Jurusancontroller::class,"index"]);
+
+Route::post("/List", [Jurusancontroller::class,"Lists"]);
