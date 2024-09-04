@@ -18,3 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::post("/test", [Jurusancontroller::class,"index"]);
 
 Route::post("/List", [Jurusancontroller::class,"Lists"]);
+
+Route::prefix('masterjurusan')->group(function () {
+    Route::post('/List', [Jurusancontroller::class,"Lists"]); 
+    Route::post('/Save', [Jurusancontroller::class,"Save"]); 
+    Route::post('/Delete', [Jurusancontroller::class,"Delete"]); 
+});
