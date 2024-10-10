@@ -14,8 +14,27 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('whome');
+    return view('pages/dashboard');
 });
-Route::post('/test', function () {
-    return 'test method home';
+
+Route::get('/pages/Datajurusan', function () {
+    return view( 'pages/Datajurusan');
+});
+Route::get('/pages/Datasiswa', function () {
+    return view( 'pages/Datasiswa');
+});
+Route::get('/pages/Datamatapelajaran', function () {
+    return view( 'pages/Datamatapelajaran');
+});
+Route::get('/pages/Databobot', function () {
+    return view( 'pages/Databobot');
+});
+Route::get('/pages/Datanilaimatapelajaran', function () {
+    return view( 'pages/Datanilaimatapelajaran');
+});
+Route::get('/pages/Normalisasi', function () {
+    return view( 'pages/Normalisasi');
+});
+Route::get('/pages/Laporan', function () {
+    return view( 'pages/Laporan');
 });

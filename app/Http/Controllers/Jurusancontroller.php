@@ -9,17 +9,16 @@ use Illuminate\Support\Facades\Validator;
 
 class Jurusancontroller extends Controller
 {
+    protected $error;
     public function Lists(Request $request)
     {
         try {
             $data = Jurusan::select("kd_jurusan","nama_jurusan")->get();
-            $this -> ResponSucces("List Data Jurusan", $data);
+            $this -> ResponSuccess("List Data Jurusan", $data);
         } catch (\Throwable $th) {
             $this -> ResponError($th->getMessage(), "", $th->GetCode());
        }
         return $this->SendRespon();
-
-        return response()->json($this->respon,$code);
     }
 
     public function Save(Request $request)
@@ -35,16 +34,20 @@ class Jurusancontroller extends Controller
                     throw new \Exception("Please Cek Data", 400);
                 }
 
-                
-                $data = $request->all();
-                $this->ResponSucces ("List Data Jurusan", $data);
+                if ($request->action =="Add") {
+                    $data = new Jurusan();
+                    $data->kd_jurusan = "J01";
+                }
 
+                $data->nama_jurusan = $request->nama_jurusan;
+                $data->save();
+                $this->ResponSuccess ("List Data Jurusan", $data);
             }catch (\Throwable $th) {
-                $this -> ResponError($th->getMessage(), "", $th->GetCode());
+                $this -> ResponError($th->getMessage(), $this->error, $th->getCode());
     }
-
     return $this->SendRespon();
 }
+
     public function Delete(Request $request)
     {
             try {
