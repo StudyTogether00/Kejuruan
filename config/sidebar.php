@@ -14,7 +14,8 @@ return [
                     "icon" => '<span class="sidebar-mini">U</span>',
                     "title" => "Master User",
                     "url" => "/MasterData/MstUser"
-                ]
+                ],
+                
             ]
         ]
     ]
