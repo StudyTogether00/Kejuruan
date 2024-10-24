@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Jurusancontroller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\BE\MstData\JurusanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,14 +12,12 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
-Route::post("/test", [Jurusancontroller::class,"index"]);
-
-Route::post("/List", [Jurusancontroller::class,"Lists"]);
-
-Route::prefix('masterjurusan')->group(function () {
-    Route::post('/List', [Jurusancontroller::class,"Lists"]); 
-    Route::post('/Save', [Jurusancontroller::class,"Save"]); 
-    Route::post('/Delete', [Jurusancontroller::class,"Delete"]); 
+Route::prefix('MasterData')->group(function () {
+    Route::prefix('Jurusan')->group(function () {
+        Route::post('List', [JurusanController::class, "Lists"]);
+        Route::post('Save', [JurusanController::class, "Save"]);
+        Route::post('Delete', [JurusanController::class, "Delete"]);
+    });
 });

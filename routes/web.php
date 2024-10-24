@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FE\MasterDataController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -11,30 +12,22 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('pages/dashboard');
 });
 
-Route::get('/pages/Datajurusan', function () {
-    return view( 'pages/Datajurusan');
+Route::prefix("MasterData")->group(function () {
+    Route::get("Jurusan", [MasterDataController::class, "Jurusan"]);
+    Route::get("Siswa", [MasterDataController::class, "Siswa"]);
+    Route::get("MataPelajaran", [MasterDataController::class, "MataPelajaran"]);
+    Route::get("Bobot", [MasterDataController::class, "Bobot"]);
 });
-Route::get('/pages/Datasiswa', function () {
-    return view( 'pages/Datasiswa');
-});
-Route::get('/pages/Datamatapelajaran', function () {
-    return view( 'pages/Datamatapelajaran');
-});
-Route::get('/pages/Databobot', function () {
-    return view( 'pages/Databobot');
-});
-Route::get('/pages/Datanilaimatapelajaran', function () {
-    return view( 'pages/Datanilaimatapelajaran');
-});
+
 Route::get('/pages/Normalisasi', function () {
-    return view( 'pages/Normalisasi');
+    return view('pages/Normalisasi');
 });
 Route::get('/pages/Laporan', function () {
-    return view( 'pages/Laporan');
+    return view('pages/Laporan');
 });

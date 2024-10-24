@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\MasterData;
+
+use App\Models\BaseModel;
 
 class Jurusan extends BaseModel
 {
