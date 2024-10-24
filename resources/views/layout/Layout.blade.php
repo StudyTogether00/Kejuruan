@@ -3,24 +3,11 @@
 
 <head>
     @include('layout.Head')
-  <meta charset="utf-8" />
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>Penentuan Jurusan</title>
-  <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-  <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-  <!-- CSS Files -->
-  <link href="assets/css/material-dashboard.css?v=2.2.2" rel="stylesheet" />
-  <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link href="assets/demo/demo.css" rel="stylesheet" />
 </head>
 
 <body class="">
   <div class="wrapper ">
-    <div class="sidebar" data-color="rose" data-background-color="black" data-image="../assets/img/sidebar-1.jpg">
+    <div class="sidebar" data-color="rose" data-background-color="black" data-image="assets/img/sidebar-1.jpg">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
@@ -32,7 +19,7 @@
       <div class="sidebar-wrapper">
         <div class="user">
           <div class="photo">
-            <img src="../assets/img/faces/novelia.jpeg" />
+            <img src="assets/img/faces/novelia.jpeg" />
           </div>
           <div class="user-info">
             <a data-toggle="collapse" href="#collapseExample" class="username">
@@ -73,43 +60,43 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="../pages/Datajurusan">
+            <a class="nav-link" href="pages/Datajurusan">
             <i class="material-icons">image</i>
               <p> Data Jurusan </p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="../pages/Datasiswa">
+            <a class="nav-link" href="pages/Datasiswa">
               <i class="material-icons">apps</i>
               <p> Data Siswa </p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="../pages/Datamatapelajaran">
+            <a class="nav-link" href="pages/Datamatapelajaran">
               <i class="material-icons">content_paste</i>
               <p> Data Matapelajaran </p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="../pages/Databobot">
+            <a class="nav-link" href="pages/Databobot">
               <i class="material-icons">grid_on</i>
               <p> Data Bobot </p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="../pages/Datanilaimatapelajaran">
+            <a class="nav-link" href="pages/Datanilaimatapelajaran">
               <i class="material-icons">place</i>
               <p> Data Nilai Matapelajaran </p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="../pages/Normalisasi">
+            <a class="nav-link" href="pages/Normalisasi">
               <i class="material-icons">widgets</i>
               <p> Normalisasi </p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="../pages/Laporan">
+            <a class="nav-link" href="pages/Laporan">
               <i class="material-icons">timeline</i>
               <p> laporan </p>
             </a>

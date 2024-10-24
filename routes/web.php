@@ -38,3 +38,6 @@ Route::get('/pages/Normalisasi', function () {
 Route::get('/pages/Laporan', function () {
     return view( 'pages/Laporan');
 });
+Route::get('/MasterData/MstUser', function () {
+    return view('pages.MasterUser');
+});
