@@ -38,12 +38,15 @@ class JurusanController extends BaseController
             DB::beginTransaction();
             $validation = Validator::make($request->all(), [
                 "action" => "required|in:{$this->option_action}",
-                "kd_jurusan" => "required",
+                "kd_jurusan" => "required_if:action,Edit|nullable",
                 "nama_jurusan" => "required",
             ]);
             if ($validation->fails()) {
                 $this->error = $validation->errors();
                 throw new \Exception(BaseService::MessageCheckData(), 400);
+            }
+            if ($request->action == "Add") {
+                $request->kd_jurusan = "";
             }
 
             // Check Nama Jurasan
@@ -55,11 +58,13 @@ class JurusanController extends BaseController
             $data = JurusanService::Detail($request->kd_jurusan, $request->action);
             if ($request->action == "Add") {
                 $data = JurusanService::new ();
-                $data->kd_jurusan = $request->kd_jurusan;
+                $last = JurusanService::Data()->where(DB::raw("LEFT(kd_jurusan, 1)"), "J")->orderBy("kd_jurusan", "desc")->first();
+                $kd_jurusan = "J" . substr("00000000" . (intval(empty($last->kd_jurusan) ? 0 : substr($last->kd_jurusan, -9)) + 1), -9);
+                $data->kd_jurusan = $kd_jurusan;
                 $data->created_at = Carbon::now();
             }
             $data->nama_jurusan = $request->nama_jurusan;
-            $data->update_at = Carbon::now();
+            $data->updated_at = Carbon::now();
             $data->save();
 
             DB::commit();

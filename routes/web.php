@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FE\MasterDataController;
+use App\Http\Controllers\FE\RouteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::get('/', function () {
-    return view('pages/dashboard');
-});
+// Route::get('/', function () {
+//     return view('pages/dashboard');
+// });
 
+Route::get("/", [RouteController::class, "Dashboard"]);
 Route::prefix("MasterData")->group(function () {
     Route::get("Jurusan", [MasterDataController::class, "Jurusan"]);
     Route::get("Siswa", [MasterDataController::class, "Siswa"]);

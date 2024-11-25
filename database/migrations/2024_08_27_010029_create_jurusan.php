@@ -14,11 +14,10 @@ class CreateJurusan extends Migration
     public function up()
     {
         Schema::create('jurusan', function (Blueprint $table) {
-            $table->string('kd_jurusan',10);
-            $table->string('nama_jurusan',25);
+            $table->string('kd_jurusan', 10);
+            $table->string('nama_jurusan', 25);
             $table->timestamps();
-
-            $table->primary('kd_jurusan',10);
+            $table->primary('kd_jurusan');
         });
     }
 

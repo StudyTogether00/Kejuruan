@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\MasterData;
 
-class Matapelajaran extends BaseModel
+use App\Models\BaseModel;
+
+class MataPelajaran extends BaseModel
 {
     protected $table = 'matapelajaran';
     protected $primaryKey = 'kd_matapelajaran';
@@ -10,7 +12,7 @@ class Matapelajaran extends BaseModel
     public $incrementing = false;
 
     protected $fillable = [
-        "kd_matapelajan",
+        "kd_matapelajaran",
         "nama_matapelajaran",
         "created_at",
         "update_at",

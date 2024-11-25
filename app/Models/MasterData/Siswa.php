@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\MasterData;
+
+use App\Models\BaseModel;
 
 class Siswa extends BaseModel
 {
-    protected $table = 'siswa';
+    protected $table = 'Siswa';
     protected $primaryKey = 'nisn';
     protected $keyType = 'string';
     public $incrementing = false;

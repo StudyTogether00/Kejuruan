@@ -20,6 +20,16 @@ return [
                     "title" => "Data Siswa",
                     "url" => "MasterData/Siswa",
                 ],
+                [
+                    "icon" => '<span class="sidebar-mini">M</span>',
+                    "title" => "Data Mapel",
+                    "url" => "MasterData/MataPelajaran",
+                ],
+                [
+                    "icon" => '<span class="sidebar-mini">B</span>',
+                    "title" => "Data Bobot",
+                    "url" => "MasterData/Bobot",
+                ],
             ],
         ],
     ],

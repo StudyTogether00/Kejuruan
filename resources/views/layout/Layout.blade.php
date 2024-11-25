@@ -6,6 +6,10 @@
 </head>
 
 <body>
+    <div id="overlay" class="w-100 justify-content-center align-items-center">
+        <!-- .d-flex -->
+        <div class="spinner"></div>
+    </div>
     <div class="wrapper ">
         @include('layout.Sidebar')
         <div class="main-panel">
