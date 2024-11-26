@@ -32,5 +32,21 @@ return [
                 ],
             ],
         ],
+        [
+            "icon" => '<i class="material-icons">assignment_add</i>',
+            "title" => "Penilaian",
+            "url" => "Process/Nilai",
+        ],
+        [
+            "icon" => '<i class="material-icons">print</i>',
+            "title" => "Report",
+            "sub_menu" => [
+                [
+                    "icon" => '<span class="sidebar-mini">N</span>',
+                    "title" => "Nominasi",
+                    "url" => "Report/Nominasi",
+                ],
+            ],
+        ],
     ],
 ];
