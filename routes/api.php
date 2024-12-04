@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BE\MstData\BobotController;
 use App\Http\Controllers\BE\MstData\JurusanController;
 use App\Http\Controllers\BE\MstData\MapelController;
 use App\Http\Controllers\BE\MstData\SiswaController;
@@ -31,5 +32,12 @@ Route::prefix('MasterData')->group(function () {
         Route::post('List', [MapelController::class, "Lists"]);
         Route::post('Save', [MapelController::class, "Save"]);
         Route::post('Delete', [MapelController::class, "Delete"]);
+    });
+    Route::prefix('Bobot')->group(function () {
+        Route::post('List', [BobotController::class, "Lists"]);
+        Route::post('DataBobot', [BobotController::class, "DataBobot"]);
+        Route::post('MapleReady', [BobotController::class, "MapleReady"]);
+        Route::post('Save', [BobotController::class, "Save"]);
+        Route::post('Delete', [BobotController::class, "Delete"]);
     });
 });

@@ -99,6 +99,9 @@
             icon + "\"> </i></a>";
         return data;
     }
+    Dec0DataTable = $.fn.dataTable.render.number(',', '.', 0);
+    Dec2DataTable = $.fn.dataTable.render.number(',', '.', 2);
+
 
     function ShowModal(id, option = "") {
         option = option ? option : {

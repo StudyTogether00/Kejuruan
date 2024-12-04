@@ -43,7 +43,7 @@ return [
             "sub_menu" => [
                 [
                     "icon" => '<span class="sidebar-mini">N</span>',
-                    "title" => "Nominasi",
+                    "title" => "Normalisasi",
                     "url" => "Report/Nominasi",
                 ],
             ],

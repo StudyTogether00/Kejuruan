@@ -32,4 +32,12 @@ class JurusanService
         }
         return $data;
     }
+
+    public static function Join($data, $kd_jurusan, $alias = "jurusan", $type = "join")
+    {
+        $data = $data->{$type}(with(new Jurusan)->getTable() . " AS {$alias}", function ($q) use ($alias, $kd_jurusan) {
+            $q->on("{$alias}.kd_jurusan", "=", $kd_jurusan);
+        });
+        return $data;
+    }
 }

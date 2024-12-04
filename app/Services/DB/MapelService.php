@@ -32,4 +32,12 @@ class MapelService
         }
         return $data;
     }
+
+    public static function Join($data, $kd_matapelajaran, $alias = "matapelajaran", $type = "join")
+    {
+        $data = $data->{$type}(with(new MataPelajaran)->getTable() . " AS {$alias}", function ($q) use ($alias, $kd_matapelajaran) {
+            $q->on("{$alias}.kd_matapelajaran", "=", $kd_matapelajaran);
+        });
+        return $data;
+    }
 }
