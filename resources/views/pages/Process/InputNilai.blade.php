@@ -16,10 +16,11 @@
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Jurusan</th>
-                                    <th>Count Mapel</th>
-                                    <th>Status</th>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">NIS/NISN</th>
+                                    <th class="text-center">Nama Siswa</th>
+                                    <th class="text-center">Nilai Rata2</th>
+                                    <th class="text-center">Status</th>
                                     <th class="disabled-sorting text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -38,21 +39,15 @@
                         width="100%" style="width:100%">
                         <thead>
                             <tr>
-                                <th colspan="6">
-                                    <x-button type="button" class="btn-outline-success" icon="fa fa-plus" label="Add"
-                                        onclick="AddDetail()" />
-                                </th>
-                            </tr>
-                            <tr>
                                 <th>No</th>
                                 <th>Mata Pelajaran</th>
-                                <th>Bobot</th>
+                                <th>Nilai</th>
                                 <th class="disabled-sorting text-center">Actions</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th colspan="2" class="text-left">Total Bobot</th>
+                                <th colspan="2" class="text-left">Rata2 Nilai</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -70,11 +65,7 @@
     <x-modal-form id="AddEditDataDetail" title="labelAddEdit">
         <div class="modal-body">
             <div class="row">
-                <x-form-group type="select" class="col-sm-12 col-md-12" label="Mata Pelajaran" name="kd_matapelajaran"
-                    required>
-                    <option value="" disabled>--Choose Pelajaran--</option>
-                </x-form-group>
-                <x-form-group class="col-sm-12 col-md-12" label="Bobot" name="bobot" required />
+                <x-form-group class="col-sm-12 col-md-12" label="Nilai" name="nilai" required />
             </div>
         </div>
         <div class="modal-footer">
@@ -99,11 +90,10 @@
 @push('scripts')
     <script type="text/javascript">
         let table, id_tbl = "#datatables";
-        let table1, TotPerse = 0,
-            tridx = 0;
-        let nama_jurusan = "",
-            dtDetail = {},
-            dtKecuali = [];
+        let table1, tridx = 0,
+            tahun = "2024";
+        let nama_siswa = "",
+            dtDetail = {};
         let processData = {};
 
         Refresh = function() {
@@ -111,7 +101,12 @@
                 let dtu = {
                     id: id_tbl,
                     data: {
-                        url: $apiUrl + "MasterData/Bobot/List"
+                        url: $apiUrl + "Process/Nilai/List",
+                        param: function() {
+                            var d = {};
+                            d.tahun = tahun;
+                            return JSON.stringify(d);
+                        }
                     }
                 };
                 table = PDataTables(dtu, [{
@@ -121,10 +116,13 @@
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 }, {
-                    "data": "nama_jurusan",
+                    "data": "nisn",
                 }, {
-                    "data": "cmapel",
-                    "className": "text-center",
+                    "data": "nama_siswa",
+                }, {
+                    "data": "rata2",
+                    "className": "text-right",
+                    render: Dec2DataTable
                 }, {
                     "data": "setup",
                     render: function(data, type, row, meta) {
@@ -160,10 +158,11 @@
                     $tr = $(this).closest('tr');
                     var data = table.row($tr).data();
                     processData = {
-                        kd_jurusan: data.kd_jurusan
+                        tahun: data.tahun,
+                        nisn: data.nisn,
                     };
-                    $("#FDelData p").html("Are you sure to delete Setup bobot <b>" + data
-                        .nama_jurusan + "</b> ?");
+                    $("#FDelData p").html("Are you sure to delete data nilai siswa <b>" +
+                        data.nama_siswa + "</b> ?");
                     ShowModal("MDelData");
                 });
             } else {
@@ -173,24 +172,22 @@
 
         ShowData = function(act = "Add", data = "") {
             let form_id = "#FAddEditData";
-            nama_jurusan = data.nama_jurusan;
-            $("#MAddEditData h4[labelAddEdit]").text("Setup Data Bobot (" + nama_jurusan + ")");
-            dtKecuali = [];
+            nama_siswa = data.nama_siswa;
+            $("#MAddEditData h4[labelAddEdit]").text("Input Nilai Siswa (" + nama_siswa + ")");
             // Get Data Bobot
             SendAjax({
-                url: $apiUrl + "MasterData/Bobot/DataBobot",
+                url: $apiUrl + "Process/Nilai/DataNilai",
                 param: {
-                    kd_jurusan: data.kd_jurusan
+                    tahun: tahun,
+                    nisn: data.nisn,
                 }
             }, function(result) {
                 processData = {
-                    kd_jurusan: data.kd_jurusan,
+                    tahun: tahun,
+                    nisn: data.nisn,
                     dtmapel: result.data
                 };
-                $.each(processData.dtmapel, function(index, value) {
-                    dtKecuali.push(value.kd_matapelajaran);
-                });
-                LoadBobot(processData.dtmapel);
+                LoadNilai(processData.dtmapel);
                 $(form_id).parsley().reset();
                 ShowModal("MAddEditData");
             }, function() {
@@ -198,7 +195,7 @@
             });
         }
 
-        LoadBobot = function(data) {
+        LoadNilai = function(data) {
             if (!$.fn.DataTable.isDataTable("#tableMaple")) {
                 let dtu = {
                     id: "#tableMaple",
@@ -214,12 +211,14 @@
                             };
 
                             // Total over all pages
-                            TotPerse = api.column(2).data().reduce(function(a, b) {
+                            let Count = 0;
+                            let RataNilai = api.column(2).data().reduce(function(a, b) {
+                                Count++;
                                 return intVal(a) + intVal(b);
                             }, 0);
-
+                            RataNilai = RataNilai / Count;
                             // Update footer
-                            $(api.column(2).footer()).html(Dec2DataTable.display(TotPerse));
+                            $(api.column(2).footer()).html(Dec2DataTable.display(RataNilai));
                         },
                         bFilter: false,
                         bPaginate: false,
@@ -236,8 +235,8 @@
                 }, {
                     "data": "nama_matapelajaran",
                 }, {
-                    "data": "bobot",
-                    "className": "text-center",
+                    "data": "nilai",
+                    "className": "text-right",
                     render: Dec2DataTable
                 }, {
                     "data": null,
@@ -258,14 +257,6 @@
                     var data = table1.row($tr).data();
                     ShowDataDetail("Edit", data);
                 });
-                table1.on('click', '.delete', function() {
-                    $tr = $(this).closest('tr');
-                    tridx = table1.row($tr).index();
-                    var data = table1.row($tr).data();
-                    processData.dtmapel.splice(tridx, 1);
-                    dtKecuali.splice(dtKecuali.indexOf(data.kd_matapelajaran), 1);
-                    LoadBobot(processData.dtmapel);
-                });
             } else {
                 $('#tableMaple').DataTable().clear();
                 $('#tableMaple').DataTable().rows.add(data);
@@ -273,77 +264,27 @@
             }
         }
 
-        AddDetail = function() {
-            ShowDataDetail();
-        }
-
         ShowDataDetail = function(act = "Add", data = "") {
             let form_id = "#FAddEditDataDetail";
-            let lbldetail = act + " Data Mata Pelajaran (" + nama_jurusan + ")";
+            let lbldetail = act + " Nilai Mata Pelajaran (" + data.nama_matapelajaran + ")";
             $("#MAddEditDataDetail h4[labelAddEdit]").text(lbldetail);
             dtDetail = {
                 action: act,
                 kd_matapelajaran: (act == "Add" ? "" : data.kd_matapelajaran),
                 nama_matapelajaran: (act == "Add" ? "" : data.nama_matapelajaran),
-                bobot: (act == "Add" ? "" : data.bobot),
+                nilai: (act == "Add" ? "" : data.nilai),
             };
-            $(form_id + " [name='kd_matapelajaran']").removeAttr('disabled').find('option:not(:first)').remove().end();
-            if (act == "Add") {
-                SendAjax({
-                    url: $apiUrl + "MasterData/Bobot/MapleReady",
-                    param: {
-                        kd_jurusan: processData.kd_jurusan,
-                        dtmapel: dtKecuali
-                    }
-                }, function(result) {
-                    let html = "";
-                    $.each(result.data, function(index, value) {
-                        html += '<option value="' + value.kd_matapelajaran + '">' + value
-                            .nama_matapelajaran + '</option>';
-                    });
-                    if (html != "") {
-                        $(html).insertAfter(form_id + " [name = 'kd_matapelajaran'] option:first");
-                        $(form_id + " .selectpicker").selectpicker('refresh');
-                    }
-                    $(form_id + " [name='kd_matapelajaran']").val(dtDetail.kd_matapelajaran).change();
-                    $(form_id + " [name='bobot']").val(dtDetail.bobot).change();
-                    $(form_id).parsley().reset();
-                    ShowModal("MAddEditDataDetail");
-                }, function() {
-                    Loader();
-                });
-            } else {
-                let html = '<option value="' + dtDetail.kd_matapelajaran + '">' + dtDetail.nama_matapelajaran +
-                    '</option>';
-                $(html).insertAfter(form_id + " [name = 'kd_matapelajaran'] option:first");
-                $(form_id + " .selectpicker").selectpicker('refresh');
-                $(form_id + " [name='kd_matapelajaran']").attr('disabled', true).val(dtDetail.kd_matapelajaran)
-                    .change();
-                $(form_id + " [name='bobot']").val(dtDetail.bobot).change();
-                $(form_id).parsley().reset();
-                ShowModal("MAddEditDataDetail");
-            }
+            $(form_id + " [name='nilai']").val(dtDetail.nilai).change();
+            $(form_id).parsley().reset();
+            ShowModal("MAddEditDataDetail");
         }
 
         SaveDetail = function() {
             let form_id = "#FAddEditDataDetail";
             if ($(form_id).parsley().validate()) {
-                if (dtDetail.action == 'Add') {
-                    processData.dtmapel.push({
-                        kd_matapelajaran: $(form_id + " [name='kd_matapelajaran']").val(),
-                        nama_matapelajaran: $(form_id + " [name='kd_matapelajaran'] [value='" + $(form_id +
-                            " [name='kd_matapelajaran']").val() + "']").text(),
-                        bobot: $(form_id + " [name='bobot']").val(),
-                    });
-                    dtKecuali.push($(form_id + " [name='kd_matapelajaran']").val());
-                    LoadBobot(processData.dtmapel);
-                    ShowModal("MAddEditDataDetail", "hide");
-                } else {
-                    processData.dtmapel[tridx].kd_matapelajaran = $(form_id + " [name='kd_matapelajaran']").val();
-                    processData.dtmapel[tridx].nama_matapelajaran = $(form_id + " [name='kd_matapelajaran'] [value='" +
-                        $(form_id + " [name='kd_matapelajaran']").val() + "']").text();
-                    processData.dtmapel[tridx].bobot = $(form_id + " [name='bobot']").val();
-                    LoadBobot(processData.dtmapel);
+                if (dtDetail.action == 'Add') {} else {
+                    processData.dtmapel[tridx].nilai = $(form_id + " [name='nilai']").val();
+                    LoadNilai(processData.dtmapel);
                     ShowModal("MAddEditDataDetail", "hide");
                 }
             }
@@ -351,28 +292,28 @@
 
         Save = function() {
             let form_id = "#FAddEditData";
-            if (TotPerse == 100) {
-                Loader("show");
-                let data = {
-                    url: $apiUrl + "MasterData/Bobot/Save",
-                    param: processData
-                };
-                SendAjax(data, function(result) {
-                    MessageNotif(result.message, "success");
-                    Refresh();
-                    ShowModal("MAddEditData", "hide");
-                }, function() {
-                    Loader();
-                });
-            } else {
-                MessageNotif("Total Persen Harus 100%!", "warning");
-            }
+            Loader("show");
+            let data = {
+                url: $apiUrl + "Process/Nilai/Save",
+                param: processData
+            };
+            SendAjax(data, function(result) {
+                MessageNotif(result.message, "success");
+                Refresh();
+                ShowModal("MAddEditData", "hide");
+            }, function() {
+                Loader();
+            });
         }
+
+
+
+
 
         Delete = function() {
             Loader("show");
             let data = {
-                url: $apiUrl + "MasterData/Bobot/Delete",
+                url: $apiUrl + "Process/Nilai/Delete",
                 param: processData
             };
             SendAjax(data, function(result) {

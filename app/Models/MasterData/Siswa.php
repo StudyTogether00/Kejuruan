@@ -6,7 +6,7 @@ use App\Models\BaseModel;
 
 class Siswa extends BaseModel
 {
-    protected $table = 'Siswa';
+    protected $table = 'siswa';
     protected $primaryKey = 'nisn';
     protected $keyType = 'string';
     public $incrementing = false;

@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Process;
 
-class NilaiHeader extends BaseModel
+use App\Models\BaseModel;
+
+class HeaderNilai extends BaseModel
 {
     protected $table = 'nilai_header';
     protected $primaryKey = ['tahun', 'nisn'];
-    protected $keyType = ['integer', 'string'];
+    protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [

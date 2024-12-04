@@ -151,12 +151,12 @@ class BobotController extends BaseController
             // Check Jumlah Mapel
             $dtcmapel = $data->count();
             if ($dtcmapel > 0) {
+                $data = $data->get();
                 // Delete Data mapel
                 BobotService::Data()->where("bobot.kd_jurusan", $request->kd_jurusan)->delete();
             } else {
                 throw new \Exception(BaseService::MessageNotFound("Setup Bobot"), 400);
             }
-            $data = $data->get();
             DB::commit();
             $this->respon = BaseService::ResponseSuccess(BaseService::MsgSuccess($this->pns, 3), $data);
         } catch (\Throwable $th) {

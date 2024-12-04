@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Process;
 
-class Detail_Nilai extends BaseModel
+use App\Models\BaseModel;
+
+class DetailNilai extends BaseModel
 {
     protected $table = 'detail_nilai';
     protected $primaryKey = ['tahun', 'nisn', 'kd_matapelajaran'];
-    protected $keyType = ['integer', 'string', 'string'];
+    protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [

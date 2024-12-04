@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FE\MasterDataController;
+use App\Http\Controllers\FE\ProcessController;
 use App\Http\Controllers\FE\RouteController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,13 +27,6 @@ Route::prefix("MasterData")->group(function () {
     Route::get("MataPelajaran", [MasterDataController::class, "MataPelajaran"]);
     Route::get("Bobot", [MasterDataController::class, "Bobot"]);
 });
-
-Route::get('/pages/Normalisasi', function () {
-    return view('pages/Normalisasi');
-});
-Route::get('/pages/Laporan', function () {
-    return view('pages/Laporan');
-});
-Route::get('/MasterData/MstUser', function () {
-    return view('pages.MasterUser');
+Route::prefix("Process")->group(function () {
+    Route::get("Nilai", [ProcessController::class, "Nilai"]);
 });

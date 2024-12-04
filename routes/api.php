@@ -4,6 +4,7 @@ use App\Http\Controllers\BE\MstData\BobotController;
 use App\Http\Controllers\BE\MstData\JurusanController;
 use App\Http\Controllers\BE\MstData\MapelController;
 use App\Http\Controllers\BE\MstData\SiswaController;
+use App\Http\Controllers\BE\Process\NilaiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,5 +40,13 @@ Route::prefix('MasterData')->group(function () {
         Route::post('MapleReady', [BobotController::class, "MapleReady"]);
         Route::post('Save', [BobotController::class, "Save"]);
         Route::post('Delete', [BobotController::class, "Delete"]);
+    });
+});
+Route::prefix('Process')->group(function () {
+    Route::prefix('Nilai')->group(function () {
+        Route::post('List', [NilaiController::class, "Lists"]);
+        Route::post('DataNilai', [NilaiController::class, "DataNilai"]);
+        Route::post('Save', [NilaiController::class, "Save"]);
+        Route::post('Delete', [NilaiController::class, "Delete"]);
     });
 });
