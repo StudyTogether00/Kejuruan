@@ -306,10 +306,6 @@
             });
         }
 
-
-
-
-
         Delete = function() {
             Loader("show");
             let data = {
