@@ -113,50 +113,50 @@
     }
 
     SendAjax = function(data, fc, fc1 = function() {}) {
-            var url = data.url;
-            var method = data.method ? data.method : "POST";
-            var dataType = data.dataType ? data.dataType : "jsonp";
-            var param = data.param ? data.param : {};
+        var url = data.url;
+        var method = data.method ? data.method : "POST";
+        var dataType = data.dataType ? data.dataType : "jsonp";
+        var param = data.param ? data.param : {};
 
-            $.ajax({
-                    type: method,
-                    // dataType: dataType,
-                    url: url,
-                    data: param,
-                    // headers: {
-                    //     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBWZXIiOiIwLjAuMCIsImV4cCI6NDcyNjM4OTEyMiwibG9jYWxlIjoiIiwibWFzdGVyVmVyIjoiIiwicGxhdGZvcm0iOiIiLCJwbGF0Zm9ybVZlciI6IiIsInVzZXJJZCI6IiJ9.QIZbmB5_9Xlap_gDhjETfMI6EAmR15yBtIQkWFWJkrg',
-                    //     'Content-Type': 'application/json'
-                    // },
-                    success: function(data, status, xhr) {
-                        let result = data;
-                        fc1();
-                        if (result.status) {
-                            fc(result);
-                        } else {
-                            MessageNotif(result.message, "warning");
-                        }
-                    },
-                    error: function(e) {
-                        fc1();
-                        console.info(e);
-                        if (e.status == 500) {
-                            MessageNotif(result.message, "danger");
-                        } else if (e.status == 400) {
-                            MessageNotif(result.message, "warning");
-                            else {
-                                MessageNotif("Please, Check Your Connection!", "danger");
-                            }
-                        }
-                    });
+        $.ajax({
+            type: method,
+            // dataType: dataType,
+            url: url,
+            data: param,
+            // headers: {
+            //     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBWZXIiOiIwLjAuMCIsImV4cCI6NDcyNjM4OTEyMiwibG9jYWxlIjoiIiwibWFzdGVyVmVyIjoiIiwicGxhdGZvcm0iOiIiLCJwbGF0Zm9ybVZlciI6IiIsInVzZXJJZCI6IiJ9.QIZbmB5_9Xlap_gDhjETfMI6EAmR15yBtIQkWFWJkrg',
+            //     'Content-Type': 'application/json'
+            // },
+            success: function(data, status, xhr) {
+                let result = data;
+                fc1();
+                if (result.status) {
+                    fc(result);
+                } else {
+                    MessageNotif(result.message, "warning");
+                }
+            },
+            error: function(e) {
+                fc1();
+                console.info(e);
+                if (e.status == 500) {
+                    MessageNotif(e.message, "danger");
+                } else if (e.status == 400) {
+                    MessageNotif(e.message, "warning");
+                } else {
+                    MessageNotif("Please, Check Your Connection!", "danger");
+                }
             }
+        });
+    }
 
 
 
-            $(document).ready(function() {
-                $sidebar = $('.sidebar');
-                $sidebar_img_container = $sidebar.find('.sidebar-background');
-                $full_page = $('.full-page');
-            });
+    $(document).ready(function() {
+        $sidebar = $('.sidebar');
+        $sidebar_img_container = $sidebar.find('.sidebar-background');
+        $full_page = $('.full-page');
+    });
 </script>
 
 @stack('scripts')
