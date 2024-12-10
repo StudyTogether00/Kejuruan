@@ -58,7 +58,8 @@ class JurusanController extends BaseController
             $data = JurusanService::Detail($request->kd_jurusan, $request->action);
             if ($request->action == "Add") {
                 $data = JurusanService::new ();
-                $last = JurusanService::Data()->where(DB::raw("LEFT(kd_jurusan, 1)"), "J")->orderBy("kd_jurusan", "desc")->first();
+                $last = JurusanService::Data()->where(DB::raw("LEFT(kd_jurusan, 1)"), "J")
+                ->where(DB::raw("LENGTH(kd_jurusan)"),"10")->orderBy("kd_jurusan", "desc")->first();
                 $kd_jurusan = "J" . substr("00000000" . (intval(empty($last->kd_jurusan) ? 0 : substr($last->kd_jurusan, -9)) + 1), -9);
                 $data->kd_jurusan = $kd_jurusan;
                 $data->created_at = Carbon::now();

@@ -127,6 +127,7 @@
                 kd_matapelajaran: (act == "Add" ? "" : data.kd_matapelajaran),
                 nama_matapelajaran: (act == "Add" ? "" : data.nama_matapelajaran)
             };
+            act == "Add" ? $(form_id + " [name='kd_matapelajaran']").removeAttr('disabled') : $(form_id + " [name='kd_matapelajaran']").attr('disabled', true);
             $(form_id + " [name='kd_matapelajaran']").val(processData.kd_matapelajaran).change();
             $(form_id + " [name='nama_matapelajaran']").val(processData.nama_matapelajaran).change();
 

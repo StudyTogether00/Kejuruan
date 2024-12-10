@@ -145,6 +145,7 @@
                 nama_siswa: (act == "Add" ? "" : data.nama_siswa),
                 jenis_kelamin: (act == "Add" ? "" : data.jenis_kelamin)
             };
+            act == "Add" ? $(form_id + " [name='nisn']").removeAttr('disabled') : $(form_id + " [name='nisn']").attr('disabled', true);
             $(form_id + " [name='nisn']").val(processData.nisn).change();
             $(form_id + " [name='nama_siswa']").val(processData.nama_siswa).change();
             $(form_id + " [name='jenis_kelamin']").val(processData.jenis_kelamin).change();
