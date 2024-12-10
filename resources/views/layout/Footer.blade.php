@@ -140,9 +140,9 @@
                 fc1();
                 console.info(e);
                 if (e.status == 500) {
-                    MessageNotif(e.message, "danger");
+                    MessageNotif(e.responseJSON.message, "danger");
                 } else if (e.status == 400) {
-                    MessageNotif(e.message, "warning");
+                    MessageNotif(e.responseJSON.message, "warning");
                 } else {
                     MessageNotif("Please, Check Your Connection!", "danger");
                 }

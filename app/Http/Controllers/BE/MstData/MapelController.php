@@ -54,7 +54,7 @@ class MapelController extends BaseController
             // Save Or Update
             $data = MapelService::Detail($request->kd_matapelajaran, $request->action);
             if ($request->action == "Add") {
-                $data = MapelService::new ();
+                $data = MapelService::new();
                 $data->kd_matapelajaran = $request->kd_matapelajaran;
                 $data->created_at = Carbon::now();
             }
