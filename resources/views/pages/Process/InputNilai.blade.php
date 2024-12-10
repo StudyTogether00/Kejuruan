@@ -244,10 +244,8 @@
                     "className": "text-center",
                     render: function(data, type, row, meta) {
                         let html = "";
-                        html += btnDataTable("Setup Bobot", "btn-outline-primary edit",
-                            "fa fa-edit btn-outline-primary", true);
-                        html += btnDataTable("Remove Bobot", "btn-outline-danger delete",
-                            "fa fa-trash btn-outline-danger");
+                        html += btnDataTable("Edit Nilai", "btn-outline-primary edit",
+                            "fa fa-edit btn-outline-primary");
                         return html;
                     }
                 }]);
