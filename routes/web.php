@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FE\MasterDataController;
 use App\Http\Controllers\FE\ProcessController;
+use App\Http\Controllers\FE\ReportController;
 use App\Http\Controllers\FE\RouteController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +30,7 @@ Route::prefix("MasterData")->group(function () {
 });
 Route::prefix("Process")->group(function () {
     Route::get("Nilai", [ProcessController::class, "Nilai"]);
+});
+Route::prefix("Report")->group(function () {
+    Route::get("Normalisasi", [ReportController::class, "Normalisasi"]);
 });

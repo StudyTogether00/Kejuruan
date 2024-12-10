@@ -44,7 +44,7 @@ return [
                 [
                     "icon" => '<span class="sidebar-mini">N</span>',
                     "title" => "Normalisasi",
-                    "url" => "Report/Nominasi",
+                    "url" => "Report/Normalisasi",
                 ],
             ],
         ],
