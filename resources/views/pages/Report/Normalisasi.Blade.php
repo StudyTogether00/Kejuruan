@@ -19,7 +19,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">NIS/NISN</th>
                                     <th class="text-center">Nama Siswa</th>
-                                    <th class="text-center">Jurusan</th>
+                                    <th class="text-center">Hasil</th>
                                     <th class="disabled-sorting text-center">Actions</th>
                                 </tr>
                             </thead>

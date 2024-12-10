@@ -138,7 +138,7 @@
             },
             error: function(e) {
                 fc1();
-                console.info(e);
+                // console.info(e);
                 if (e.status == 500) {
                     MessageNotif(e.responseJSON.message, "danger");
                 } else if (e.status == 400) {
