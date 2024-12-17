@@ -103,13 +103,19 @@
     Dec2DataTable = $.fn.dataTable.render.number(',', '.', 2);
 
 
-    function ShowModal(id, option = "") {
+    function ShowModal(id, option = "", scroll = false) {
         option = option ? option : {
             backdrop: 'static',
             keyboard: false
         };
         var md = $("#" + id);
-        $("#" + id).modal(option);
+        if (scroll) {
+            md = md.on('hidden.bs.modal', function(event) {
+                $('body').addClass('modal-open');
+            }).modal(option);
+        } else {
+            md.modal(option);
+        }
     }
 
     SendAjax = function(data, fc, fc1 = function() {}) {

@@ -274,7 +274,7 @@
             };
             $(form_id + " [name='nilai']").val(dtDetail.nilai).change();
             $(form_id).parsley().reset();
-            ShowModal("MAddEditDataDetail");
+            ShowModal("MAddEditDataDetail", undefined, true);
         }
 
         SaveDetail = function() {
