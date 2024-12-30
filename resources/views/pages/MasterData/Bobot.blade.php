@@ -301,10 +301,10 @@
                         html += '<option value="' + value.kd_matapelajaran + '">' + value
                             .nama_matapelajaran + '</option>';
                     });
-                    // if (html != "") {
-                    $(html).insertAfter(form_id + " [name = 'kd_matapelajaran'] option:first");
-                    $(form_id + " .selectpicker").selectpicker('refresh');
-                    // }
+                    if (html != "") {
+                        $(html).insertAfter(form_id + " [name = 'kd_matapelajaran'] option:first");
+                        $(form_id + " .selectpicker").selectpicker('refresh');
+                    }
                     $(form_id + " [name='kd_matapelajaran']").val(dtDetail.kd_matapelajaran).change();
                     $(form_id + " [name='bobot']").val(dtDetail.bobot).change();
                     $(form_id).parsley().reset();

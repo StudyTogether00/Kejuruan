@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class BobotService
 {
-    public static function new ()
+    public static function new()
     {
         return new Bobot();
     }
@@ -43,7 +43,7 @@ class BobotService
     public static function Join($data, $kd_jurusan, $kd_matapelajaran, $alias = "bobot", $type = "join", $versi = "v1")
     {
         $data = $data->{$type}(with(new Bobot)->getTable() . " AS {$alias}", function ($q) use ($alias, $kd_jurusan, $kd_matapelajaran, $versi) {
-            $q->on("{$alias}.kd_jurusan", "=", ($versi == "v2" ? DB::raw("'{$kd_jurusan}'") : $kd_jurusan));
+            $versi == "v3" ? null : $q->on("{$alias}.kd_jurusan", "=", ($versi == "v2" ? DB::raw("'{$kd_jurusan}'") : $kd_jurusan));
             $q->on("{$alias}.kd_matapelajaran", "=", $kd_matapelajaran);
         });
         return $data;

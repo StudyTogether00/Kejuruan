@@ -13,6 +13,8 @@
                                     <th colspan="6">
                                         <x-button type="button" class="btn-outline-info" icon="fa fa-refresh"
                                             label="Refresh" onclick="Refresh()" />
+                                        <x-button type="button" class="btn-outline-success" icon="fa fa-download"
+                                            label="Download" onclick="Download()" />
                                     </th>
                                 </tr>
                                 <tr>
@@ -33,6 +35,12 @@
     <x-modal-form id="AddEditData" title="labelAddEdit" class="modal-lg">
         <div class="modal-body">
             <div class="row">
+                <div class="col-sm-6">
+                    <x-form-group type="select" class="col-sm-12 col-md-12" label="Jurusan" name="kd_jurusan"
+                        onchange="LoadNilai()">
+                        <option value="" disabled>--Choose Jurusan--</option>
+                    </x-form-group>
+                </div>
                 <div class="material-datatables col-sm-12">
                     <table id="tableMaple" class="table table-striped table-no-bordered table-hover" cellspacing="0"
                         width="100%" style="width:100%">
@@ -40,13 +48,15 @@
                             <tr>
                                 <th>No</th>
                                 <th>Mata Pelajaran</th>
+                                <th>Bobot</th>
                                 <th>Nilai</th>
-                                <th class="disabled-sorting text-center">Actions</th>
+                                <th>Matrix</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th colspan="2" class="text-left">Rata2 Nilai</th>
+                                <th colspan="2" class="text-left">Nilai Akhir</th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -60,18 +70,6 @@
             <x-button type="submit" class="btn-outline-primary" onclick="Save()">Save</x-button>
         </div>
     </x-modal-form>
-    {{-- Add Edit Detail Modal --}}
-    <x-modal-form id="AddEditDataDetail" title="labelAddEdit">
-        <div class="modal-body">
-            <div class="row">
-                <x-form-group class="col-sm-12 col-md-12" label="Nilai" name="nilai" required />
-            </div>
-        </div>
-        <div class="modal-footer">
-            <x-button type="button" class="btn-outline-secondary mr-1" label="Close" data-dismiss="modal" />
-            <x-button type="submit" class="btn-outline-primary" onclick="SaveDetail()">Save</x-button>
-        </div>
-    </x-modal-form>
 @endsection
 @push('scripts')
     <script type="text/javascript">
@@ -79,6 +77,7 @@
         let table1, tridx = 0,
             tahun = "2024";
         let nama_siswa = "",
+            nisn = "",
             dtDetail = {};
         let processData = {};
 
@@ -87,7 +86,7 @@
                 let dtu = {
                     id: id_tbl,
                     data: {
-                        url: $apiUrl + "Process/Nilai/List",
+                        url: $apiUrl + "Report/Normalisasi/Keputusan",
                         param: function() {
                             var d = {};
                             d.tahun = tahun;
@@ -106,87 +105,68 @@
                 }, {
                     "data": "nama_siswa",
                 }, {
-                    "data": "rata2",
-                    "className": "text-right",
-                    render: Dec2DataTable
-                }, {
-                    "data": "setup",
-                    render: function(data, type, row, meta) {
-                        var html = ""
-                        if (data == 0) {
-                            html = "Not Set";
-                        } else {
-                            html = "Done";
-                        }
-                        return html
-                    }
+                    "data": "nama_jurusan",
                 }, {
                     "data": null,
                     "orderable": false,
                     "className": "text-center",
                     render: function(data, type, row, meta) {
                         let html = "";
-                        html += btnDataTable("Setup Bobot", "btn-outline-primary edit",
-                            "fa fa-edit btn-outline-primary", true);
-                        if (data.setup > 0) {
-                            html += btnDataTable("Remove Bobot", "btn-outline-danger delete",
-                                "fa fa-trash btn-outline-danger");
-                        }
+                        html += btnDataTable("View Detail Nilai", "btn-outline-primary view",
+                            "fa fa-eye btn-outline-primary", true);
                         return html;
                     }
                 }]);
-                table.on('click', '.edit', function() {
+                table.on('click', '.view', function() {
                     $tr = $(this).closest('tr');
                     var data = table.row($tr).data();
                     ShowData("Edit", data);
-                });
-                table.on('click', '.delete', function() {
-                    $tr = $(this).closest('tr');
-                    var data = table.row($tr).data();
-                    processData = {
-                        tahun: data.tahun,
-                        nisn: data.nisn,
-                    };
-                    $("#FDelData p").html("Are you sure to delete data nilai siswa <b>" +
-                        data.nama_siswa + "</b> ?");
-                    ShowModal("MDelData");
                 });
             } else {
                 table.ajax.reload();
             }
         }
 
-        ShowData = function(act = "Add", data = "") {
-            let form_id = "#FAddEditData";
-            nama_siswa = data.nama_siswa;
-            $("#MAddEditData h4[labelAddEdit]").text("Input Nilai Siswa (" + nama_siswa + ")");
-            // Get Data Bobot
+        DtJurusan = function() {
             SendAjax({
-                url: $apiUrl + "Process/Nilai/DataNilai",
-                param: {
-                    tahun: tahun,
-                    nisn: data.nisn,
-                }
+                url: $apiUrl + "MasterData/Jurusan/List",
             }, function(result) {
-                processData = {
-                    tahun: tahun,
-                    nisn: data.nisn,
-                    dtmapel: result.data
-                };
-                LoadNilai(processData.dtmapel);
-                $(form_id).parsley().reset();
-                ShowModal("MAddEditData");
-            }, function() {
-                Loader();
+                let html = "";
+                $.each(result.data, function(index, value) {
+                    html += '<option value="' + value.kd_jurusan + '">' + value.nama_jurusan +
+                        '</option>';
+                });
+                if (html != "") {
+                    $(html).insertAfter("[name='kd_jurusan'] option:first");
+                    $(".selectpicker").selectpicker('refresh');
+                }
+                $("[name='kd_jurusan']").val("").change();
             });
         }
 
-        LoadNilai = function(data) {
+        ShowData = function(act = "Add", data = "") {
+            let form_id = "#FAddEditData";
+            nama_siswa = data.nama_siswa;
+            nisn = data.nisn;
+            $("#MAddEditData h4[labelAddEdit]").text("Nilai Siswa " + nama_siswa);
+            LoadNilai();
+            ShowModal("MAddEditData");
+        }
+
+        LoadNilai = function() {
             if (!$.fn.DataTable.isDataTable("#tableMaple")) {
                 let dtu = {
                     id: "#tableMaple",
-                    type: "manual",
-                    data: data,
+                    data: {
+                        url: $apiUrl + "Report/Normalisasi/NilaiPerNIS",
+                        param: function() {
+                            var d = {};
+                            d.tahun = tahun;
+                            d.nisn = nisn;
+                            d.kd_jurusan = $("[name='kd_jurusan']").val();
+                            return JSON.stringify(d);
+                        }
+                    },
                     config: {
                         footerCallback: function(row, data, start, end, display) {
                             let api = this.api();
@@ -212,6 +192,7 @@
                         bInfo: false,
                     }
                 };
+
                 table1 = PDataTables(dtu, [{
                     "data": null,
                     "className": "text-center",
@@ -225,51 +206,23 @@
                     "className": "text-right",
                     render: Dec2DataTable
                 }, {
-                    "data": null,
-                    "orderable": false,
-                    "className": "text-center",
-                    render: function(data, type, row, meta) {
-                        let html = "";
-                        html += btnDataTable("Setup Bobot", "btn-outline-primary edit",
-                            "fa fa-edit btn-outline-primary", true);
-                        html += btnDataTable("Remove Bobot", "btn-outline-danger delete",
-                            "fa fa-trash btn-outline-danger");
-                        return html;
-                    }
+                    "data": "nilai",
+                    "className": "text-right",
+                    render: Dec2DataTable
+                }, {
+                    "data": "nilai",
+                    "className": "text-right",
+                    render: Dec2DataTable
                 }]);
-                table1.on('click', '.edit', function() {
-                    $tr = $(this).closest('tr');
-                    tridx = table1.row($tr).index();
-                    var data = table1.row($tr).data();
-                    ShowDataDetail("Edit", data);
-                });
             } else {
-                $('#tableMaple').DataTable().clear();
-                $('#tableMaple').DataTable().rows.add(data);
-                $('#tableMaple').DataTable().draw();
+                table1.ajax.reload();
             }
         }
-
-        ShowDataDetail = function(act = "Add", data = "") {
-            let form_id = "#FAddEditDataDetail";
-            let lbldetail = act + " Nilai Mata Pelajaran (" + data.nama_matapelajaran + ")";
-            $("#MAddEditDataDetail h4[labelAddEdit]").text(lbldetail);
-            dtDetail = {
-                action: act,
-                kd_matapelajaran: (act == "Add" ? "" : data.kd_matapelajaran),
-                nama_matapelajaran: (act == "Add" ? "" : data.nama_matapelajaran),
-                nilai: (act == "Add" ? "" : data.nilai),
-            };
-            $(form_id + " [name='nilai']").val(dtDetail.nilai).change();
-            $(form_id).parsley().reset();
-            ShowModal("MAddEditDataDetail");
-        }
-
-
 
 
         $(document).ready(function() {
             Refresh();
+            DtJurusan();
         });
     </script>
 @endpush
