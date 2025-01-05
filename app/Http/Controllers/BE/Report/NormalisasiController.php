@@ -6,10 +6,8 @@ use App\Http\Controllers\BE\BaseController;
 use App\Services\BaseService;
 use App\Services\DB\BobotService;
 use App\Services\DB\JurusanService;
-use App\Services\DB\MapelService;
 use App\Services\DB\NilaiService;
 use App\Services\DB\SiswaService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -73,11 +71,22 @@ class NormalisasiController extends BaseController
             }
             $data = [];
             if (!empty($request->kd_jurusan) && !empty($request->nisn)) {
-                $data = MapelService::Data();
-                $data = NilaiService::JoinDetail($data, $request->tahun, $request->nisn, "matapelajaran.kd_matapelajaran", "dn", "leftJoin", "v2");
-                $data = $data->select("matapelajaran.kd_matapelajaran", "matapelajaran.nama_matapelajaran");
-                $data = $data->selectRaw("IFNULL(dn.nilai, 0) AS nilai");
-                $data = $data->orderBy("matapelajaran.nama_matapelajaran")->get();
+                // data matrix min and max nilai per tahun
+                $dtmatrix = NilaiService::DataDetail();
+                $dtmatrix = $dtmatrix->select("tahun", "kd_matapelajaran");
+                $dtmatrix = $dtmatrix->selectRaw("MIN(nilai) AS minnilai, MAX(nilai) AS maxnilai");
+                $dtmatrix = $dtmatrix->groupBy("tahun", "kd_matapelajaran");
+
+                $data = BobotService::Data("Maple");
+                $data = NilaiService::JoinDetail($data, $request->tahun, $request->nisn, "bobot.kd_matapelajaran", "dn", "leftJoin", "v2");
+                $data = $data->leftJoinSub($dtmatrix, "mt", function ($q) {
+                    $q->on("mt.tahun", "=", "dn.tahun");
+                    $q->on("mt.kd_matapelajaran", "=", "dn.kd_matapelajaran");
+                });
+                $data = $data->where("bobot.kd_jurusan", $request->kd_jurusan);
+                $data = $data->select("bobot.kd_jurusan", "bobot.kd_matapelajaran", "mp.nama_matapelajaran", "bobot.bobot");
+                $data = $data->selectRaw("IFNULL(dn.nilai, 0) AS nilai, IFNULL(mt.minnilai, 0) AS minnilai, IFNULL(mt.maxnilai, 0) AS maxnilai");
+                $data = $data->orderBy("mp.nama_matapelajaran")->get();
             }
 
             $this->respon = BaseService::ResponseSuccess(BaseService::MsgSuccess($this->pns, 1), $data);
@@ -87,98 +96,21 @@ class NormalisasiController extends BaseController
         return $this->SendResponse();
     }
 
-    public function Save(Request $request)
+    public function DownloadReport(Request $request)
     {
         try {
-            DB::beginTransaction();
-            $validation = Validator::make($request->all(), [
-                "tahun" => "required",
-                "nisn" => "required",
-                "dtmapel" => "required|array|min:1",
-            ]);
+            $validation = Validator::make($request->all(), ["tahun" => "required"]);
             if ($validation->fails()) {
                 $this->error = $validation->errors();
                 throw new \Exception(BaseService::MessageCheckData(), 400);
             }
-
-            // Check Siswa
-            $dtsiswa = SiswaService::Detail($request->nisn);
-
-            $timeupdate = Carbon::now();
-            // Save or Update Header Nilai
-            $dtheader = NilaiService::DetailHeader($request->tahun, $request->nisn, "", false);
-            if (empty($dtheader->nisn)) {
-                $dtheader = NilaiService::NewHeader();
-                $dtheader->tahun = $request->tahun;
-                $dtheader->nisn = $request->nisn;
-                $dtheader->{"nilai_rata-rata"} = 0;
-                $dtheader->created_at = $timeupdate;
-                $dtheader->save();
-            } else {
-                // Delete Data Detail Nilai
-                NilaiService::DataDetail($request->tahun)->where("detail_nilai.nisn", $request->nisn)->delete();
+            $data = [];
+            if (!empty($request->tahun)) {
+                $data = [];
             }
 
-            // Insert Data Detail Nilai
-            $totalNilai = 0;
-            $countNilai = 0;
-            foreach ($request->dtmapel as $val) {
-                // Check Mapel
-                $dtmapel = MapelService::Detail($val["kd_matapelajaran"]);
-
-                $dtdetail = NilaiService::NewDetail();
-                $dtdetail->tahun = $dtheader->tahun;
-                $dtdetail->nisn = $dtheader->nisn;
-                $dtdetail->kd_matapelajaran = $val["kd_matapelajaran"];
-                $dtdetail->nilai = $val["nilai"];
-                $dtdetail->created_at = $timeupdate;
-                $dtdetail->updated_at = $timeupdate;
-                $dtdetail->save();
-
-                $totalNilai += $val["nilai"];
-                $countNilai++;
-            }
-
-            // update nilai rata2
-            $dtheader->{"nilai_rata-rata"} = $totalNilai / $countNilai;
-            $dtheader->updated_at = $timeupdate;
-            $dtheader->save();
-
-            $data = $dtheader;
-            $data->detail = NilaiService::DataDetail($dtheader->tahun)->where("detail_nilai.nisn", $dtheader->nisn)->get();
-            DB::commit();
-            $this->respon = BaseService::ResponseSuccess(BaseService::MsgSuccess($this->pns, 2), $data);
+            $this->respon = BaseService::ResponseSuccess(BaseService::MsgSuccess($this->pns, 1), $data);
         } catch (\Throwable $th) {
-            DB::rollBack();
-            $this->respon = BaseService::ResponseError($th->getMessage(), $this->error, $th->getCode());
-        }
-        return $this->SendResponse();
-    }
-
-    public function Delete(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-            $validation = Validator::make($request->all(), ["tahun" => "required", "nisn" => "required"]);
-            if ($validation->fails()) {
-                $this->error = $validation->errors();
-                throw new \Exception(BaseService::MessageCheckData(), 400);
-            }
-
-            // DataHeader
-            $dtheader = NilaiService::DetailHeader($request->tahun, $request->nisn);
-
-            $data = $dtheader;
-            $data->detail = NilaiService::DataDetail($dtheader->tahun)->where("detail_nilai.nisn", $dtheader->nisn)->get();
-
-            // Delete Data
-            NilaiService::DataDetail($dtheader->tahun)->where("detail_nilai.nisn", $dtheader->nisn)->delete();
-            $dtheader->delete();
-
-            DB::commit();
-            $this->respon = BaseService::ResponseSuccess(BaseService::MsgSuccess($this->pns, 3), $data);
-        } catch (\Throwable $th) {
-            DB::rollBack();
             $this->respon = BaseService::ResponseError($th->getMessage(), $this->error, $th->getCode());
         }
         return $this->SendResponse();

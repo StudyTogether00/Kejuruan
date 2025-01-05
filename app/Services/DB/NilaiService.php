@@ -47,10 +47,12 @@ class NilaiService
     {
         return new DetailNilai();
     }
-
-    public static function DataDetail($tahun, $list = "")
+    public static function DataDetail($tahun = "", $list = "")
     {
-        $data = DetailNilai::distinct()->where("detail_nilai.tahun", DB::raw("'{$tahun}'"));
+        $data = DetailNilai::distinct();
+        if (!empty($tahun)) {
+            $data = $data->where("detail_nilai.tahun", DB::raw("'{$tahun}'"));
+        }
         if ($list == "Maple") {
             $data = MapelService::Join($data, "detail_nilai.kd_matapelajaran", "mp");
         }

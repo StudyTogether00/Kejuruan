@@ -65,10 +65,6 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <x-button type="button" class="btn-outline-secondary mr-1" label="Close" data-dismiss="modal" />
-            <x-button type="submit" class="btn-outline-primary" onclick="Save()">Save</x-button>
-        </div>
     </x-modal-form>
 @endsection
 @push('scripts')
@@ -176,15 +172,13 @@
                                     typeof i === 'number' ? i : 0;
                             };
 
-                            // Total over all pages
-                            let Count = 0;
-                            let RataNilai = api.column(2).data().reduce(function(a, b) {
-                                Count++;
-                                return intVal(a) + intVal(b);
+                            // console.log(data);
+                            let NilaiAkhir = data.reduce(function(a, b) {
+                                return intVal(a) + (intVal(b.bobot) / 100 * intVal(b.nilai));
                             }, 0);
-                            RataNilai = RataNilai / Count;
+
                             // Update footer
-                            $(api.column(2).footer()).html(Dec2DataTable.display(RataNilai));
+                            $(api.column(3).footer()).html(Dec2DataTable.display(NilaiAkhir));
                         },
                         bFilter: false,
                         bPaginate: false,
@@ -202,7 +196,7 @@
                 }, {
                     "data": "nama_matapelajaran",
                 }, {
-                    "data": "nilai",
+                    "data": "bobot",
                     "className": "text-right",
                     render: Dec2DataTable
                 }, {
@@ -210,15 +204,20 @@
                     "className": "text-right",
                     render: Dec2DataTable
                 }, {
-                    "data": "nilai",
+                    "data": null,
                     "className": "text-right",
-                    render: Dec2DataTable
+                    render: function(data, type, row, meta) {
+                        return Dec2DataTable.display(data.nilai / data.maxnilai);
+                    }
                 }]);
             } else {
                 table1.ajax.reload();
             }
         }
 
+        DownloadReport = function() {
+
+        }
 
         $(document).ready(function() {
             Refresh();
