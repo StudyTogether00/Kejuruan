@@ -17,5 +17,10 @@ class RouteController extends Controller
         $this->data["title"] = "Dashboard";
         return view("pages.dashboard", $this->data);
     }
+    public function Login(Request $request)
+    {
+        $this->data["title"] = "Login";
+        return view("pages.Login", $this->data);
+    }
 
 }
