@@ -49,4 +49,22 @@ return [
             ],
         ],
     ],
+    "user" => [
+        [
+            "icon" => '<i class="material-icons">dashboard</i>',
+            "title" => "Dashboard",
+            "url" => "/",
+        ],
+        [
+            "icon" => '<i class="material-icons">print</i>',
+            "title" => "Report",
+            "sub_menu" => [
+                [
+                    "icon" => '<span class="sidebar-mini">N</span>',
+                    "title" => "Normalisasi",
+                    "url" => "Report/Normalisasi",
+                ],
+            ],
+        ],
+    ],
 ];

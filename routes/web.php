@@ -17,11 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-// Route::get('/', function () {
-//     return view('pages/dashboard');
-// });
-
-Route::get("/", [RouteController::class, "Dashboard"]);
+Route::get("/", [RouteController::class, "Dashboard"]); //->middleware("websession");
 Route::get("/Login", [RouteController::class, "Login"]);
 Route::prefix("MasterData")->group(function () {
     Route::get("Jurusan", [MasterDataController::class, "Jurusan"]);

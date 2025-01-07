@@ -19,8 +19,19 @@ class RouteController extends Controller
     }
     public function Login(Request $request)
     {
+        if ($this->checksession($request)) {
+            return redirect("/");
+        }
         $this->data["title"] = "Login";
         return view("pages.Login", $this->data);
     }
 
+    public function CheckSession(Request $request)
+    {
+        $token = !empty($request->session()->get("data.token")) ? $request->session()->get("data.token") : "";
+        if (empty($token)) {
+            return false;
+        }
+        return true;
+    }
 }
