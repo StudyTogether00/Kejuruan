@@ -17,17 +17,19 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::get("/", [RouteController::class, "Dashboard"]); //->middleware("websession");
-Route::get("/Login", [RouteController::class, "Login"]);
-Route::prefix("MasterData")->group(function () {
+Route::get("/", [RouteController::class, "Dashboard"])->middleware("websession");
+Route::get("Login", [RouteController::class, "Login"]);
+Route::post("SignIn", [RouteController::class, "SignIn"]);
+Route::post("DestroySession", [RouteController::class, "DestroySession"]);
+Route::prefix("MasterData")->middleware("websession")->group(function () {
     Route::get("Jurusan", [MasterDataController::class, "Jurusan"]);
     Route::get("Siswa", [MasterDataController::class, "Siswa"]);
     Route::get("MataPelajaran", [MasterDataController::class, "MataPelajaran"]);
     Route::get("Bobot", [MasterDataController::class, "Bobot"]);
 });
-Route::prefix("Process")->group(function () {
+Route::prefix("Process")->middleware("websession")->group(function () {
     Route::get("Nilai", [ProcessController::class, "Nilai"]);
 });
-Route::prefix("Report")->group(function () {
+Route::prefix("Report")->middleware("websession")->group(function () {
     Route::get("Normalisasi", [ReportController::class, "Normalisasi"]);
 });

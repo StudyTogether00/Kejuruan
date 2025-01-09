@@ -13,12 +13,13 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
-                        <form class="form" method="" action="">
+                        <form id="Flogin" data-parsley-errors-messages-disabled onsubmit="return false">
+                            @csrf
                             <div class="card card-login card-hidden">
                                 <div class="card-header card-header-rose text-center">
                                     <h4 class="card-title">Login</h4>
                                 </div>
-                                <div class="card-body ">
+                                <div class="card-body">
                                     <span class="bmd-form-group">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -26,7 +27,8 @@
                                                     <i class="material-icons">face</i>
                                                 </span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Username">
+                                            <input type="text" class="form-control" name="username"
+                                                placeholder="Username" required>
                                         </div>
                                     </span>
                                     <span class="bmd-form-group">
@@ -36,12 +38,13 @@
                                                     <i class="material-icons">lock_outline</i>
                                                 </span>
                                             </div>
-                                            <input type="password" class="form-control" placeholder="Password...">
+                                            <input type="password" class="form-control" name="password"
+                                                placeholder="Password..." required>
                                         </div>
                                     </span>
                                 </div>
                                 <div class="card-footer justify-content-center">
-                                    <a href="/" class="btn btn-rose btn-link btn-lg">Login</a>
+                                    <button class="btn btn-rose btn-link btn-lg" onclick="Login()">Login</button>
                                 </div>
                             </div>
                         </form>
@@ -59,6 +62,27 @@
                 $('.card').removeClass('card-hidden');
             }, 700);
         });
+        Login = function() {
+            let form_id = "#Flogin";
+            if ($(form_id).parsley().validate()) {
+                let data = {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "SignIn",
+                    param: {
+                        username: $(form_id + " [name='username']").val(),
+                        password: $(form_id + " [name='password']").val()
+                    }
+                };
+                SendAjax(data, function(result) {
+                    MessageNotif(result.message, "success");
+                    window.location.reload(true);
+                }, function() {
+                    Loader();
+                });
+            }
+        }
     </script>
 </body>
 

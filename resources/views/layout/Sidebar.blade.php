@@ -1,3 +1,7 @@
+@php
+    $session = Session::get('data.data');
+    $listmenu = $session['role'] == 'admin' ? config('sidebar.menu') : config('sidebar.user');
+@endphp
 <div class="sidebar" data-color="rose" data-background-color="black" data-image="assets/img/sidebar-1.jpg">
     <div class="logo">
         <a href="/" class="simple-text logo-mini">PS</a>
@@ -9,28 +13,16 @@
             <div class="user-info">
                 <a data-toggle="collapse" href="#collapseExample" class="username">
                     <span>
-                        Novelia Ramadhani
+                        {{ $session['fullname'] }}
                         <b class="caret"></b>
                     </span>
                 </a>
                 <div class="collapse" id="collapseExample">
                     <ul class="nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span class="sidebar-mini"> MP </span>
-                                <span class="sidebar-normal"> My Profile </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span class="sidebar-mini"> EP </span>
-                                <span class="sidebar-normal"> Edit Profile </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span class="sidebar-mini"> S </span>
-                                <span class="sidebar-normal"> Settings </span>
+                            <a class="nav-link" onclick="Logout()">
+                                <span class="sidebar-mini"> L </span>
+                                <span class="sidebar-normal"> Logout </span>
                             </a>
                         </li>
                     </ul>
@@ -39,7 +31,6 @@
         </div>
         <ul class="nav">
             @php
-
                 $currentUrl = Request::path();
                 function renderSubMenu($value, $currentUrl)
                 {
@@ -82,7 +73,7 @@
                     return $subMenu;
                 }
 
-                foreach (config('sidebar.menu') as $key => $value) {
+                foreach ($listmenu as $key => $value) {
                     $GLOBALS['parent_active'] = '';
                     // Setting variable untuk sub_menu dan tidak
                     $url = !empty($value['sub_menu'])
