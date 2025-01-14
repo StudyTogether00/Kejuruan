@@ -46,7 +46,7 @@ class JurusanController extends BaseController
                 throw new \Exception(BaseService::MessageCheckData(), 400);
             }
             if ($request->action == "Add") {
-                $request->merge(['kd_jurusan' => ""]);
+                $request->kd_jurusan = "";
             }
 
             // Check Nama Jurasan
