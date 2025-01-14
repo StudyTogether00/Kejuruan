@@ -42,7 +42,10 @@ class NormalisasiController extends BaseController
                 //Group Data Nilai By Jurusan
                 $group = DB::table(DB::raw("($nilai) dn"));
                 $group = $group->select("dn.tahun", "dn.nisn", "dn.kd_jurusan");
-                $group = $group->selectRaw("SUM(dn.nilai * dn.bobot / 100) AS nilai, ROW_NUMBER() OVER (PARTITION by tahun, nisn ORDER BY nilai DESC) rn");
+                $group = $group->selectRaw(
+                    "SUM(dn.nilai * dn.bobot / 100) AS nilai,
+                    ROW_NUMBER() OVER (PARTITION by dn.tahun, dn.nisn ORDER BY SUM(dn.nilai * dn.bobot / 100) DESC) rn"
+                );
                 $group = $group->groupBy("dn.tahun", "dn.nisn", "dn.kd_jurusan");
 
                 $data = SiswaService::Data();
@@ -52,7 +55,9 @@ class NormalisasiController extends BaseController
                 });
                 $data = JurusanService::Join($data, "dn.kd_jurusan", "j");
                 $data = $data->select("dn.tahun", "siswa.nisn", "siswa.nama_siswa", "dn.kd_jurusan", "j.nama_jurusan", "dn.nilai");
-                $data = $data->orderBy("siswa.nama_siswa")->get();
+                $data = $data->orderBy("siswa.nama_siswa");
+                // dd($data->toSql());
+                $data = $data->get();
             }
             $this->respon = BaseService::ResponseSuccess(BaseService::MsgSuccess($this->pns, 1), $data);
         } catch (\Throwable $th) {

@@ -172,13 +172,20 @@
                                     typeof i === 'number' ? i : 0;
                             };
 
-                            // console.log(data);
+                            console.log(data);
                             let NilaiAkhir = data.reduce(function(a, b) {
-                                return intVal(a) + (intVal(b.bobot)  * (intVal(b.nilai) / intVal(b.maxnilai)));
-                            }, 0);
+                                    return intVal(a) + (intVal(b.bobot) / 100 * intVal(b.nilai));
+                                },
+                                0);
+                            let NilaiMatrix = data.reduce(function(a, b) {
+                                    return intVal(a) + (intVal(b.bobot) / 100 *
+                                        (intVal(b.nilai) / intVal(b.maxnilai)));
+                                },
+                                0);
 
                             // Update footer
                             $(api.column(3).footer()).html(Dec2DataTable.display(NilaiAkhir));
+                            $(api.column(4).footer()).html(Dec2DataTable.display(NilaiMatrix));
                         },
                         bFilter: false,
                         bPaginate: false,
