@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class MapelController extends BaseController
 {
-    protected $pns = "Data Mata Pelajaran";
+    protected $pns = "Data Kriteria";
     public function __construct()
     {
         parent::__construct();

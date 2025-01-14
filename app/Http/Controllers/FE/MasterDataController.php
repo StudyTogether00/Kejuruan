@@ -23,7 +23,7 @@ class MasterDataController extends RouteController
     }
     public function MataPelajaran(Request $request)
     {
-        $this->data["title"] = "Data Mata Pelajaran";
+        $this->data["title"] = "Data Kriteria";
         return view("pages.MasterData.MataPelajaran", $this->data);
     }
     public function Bobot(Request $request)

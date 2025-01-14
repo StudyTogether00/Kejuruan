@@ -18,7 +18,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Jurusan</th>
-                                    <th>Count Mapel</th>
+                                    <th>Count Kriteria</th>
                                     <th>Status</th>
                                     <th class="disabled-sorting text-center">Actions</th>
                                 </tr>
@@ -45,7 +45,7 @@
                             </tr>
                             <tr>
                                 <th>No</th>
-                                <th>Mata Pelajaran</th>
+                                <th>Kriteria</th>
                                 <th>Bobot</th>
                                 <th class="disabled-sorting text-center">Actions</th>
                             </tr>
@@ -70,9 +70,9 @@
     <x-modal-form id="AddEditDataDetail" title="labelAddEdit">
         <div class="modal-body">
             <div class="row">
-                <x-form-group type="select" class="col-sm-12 col-md-12" label="Mata Pelajaran" name="kd_matapelajaran"
+                <x-form-group type="select" class="col-sm-12 col-md-12" label="Kriteria" name="kd_matapelajaran"
                     required>
-                    <option value="" disabled>--Choose Pelajaran--</option>
+                    <option value="" disabled>--Choose Kriteria--</option>
                 </x-form-group>
                 <x-form-group class="col-sm-12 col-md-12" label="Bobot" name="bobot" required />
             </div>
@@ -279,7 +279,7 @@
 
         ShowDataDetail = function(act = "Add", data = "") {
             let form_id = "#FAddEditDataDetail";
-            let lbldetail = act + " Data Mata Pelajaran (" + nama_jurusan + ")";
+            let lbldetail = act + " Data Kriteria (" + nama_jurusan + ")";
             $("#MAddEditDataDetail h4[labelAddEdit]").text(lbldetail);
             dtDetail = {
                 action: act,

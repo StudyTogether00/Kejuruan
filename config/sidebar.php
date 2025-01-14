@@ -22,7 +22,7 @@ return [
                 ],
                 [
                     "icon" => '<span class="sidebar-mini">M</span>',
-                    "title" => "Data Mapel",
+                    "title" => "Data Kriteria",
                     "url" => "MasterData/MataPelajaran",
                 ],
                 [

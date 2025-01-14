@@ -40,7 +40,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Mata Pelajaran</th>
+                                <th>Kriteria</th>
                                 <th>Nilai</th>
                                 <th class="disabled-sorting text-center">Actions</th>
                             </tr>

@@ -47,7 +47,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Mata Pelajaran</th>
+                                <th>Kriteria</th>
                                 <th>Bobot</th>
                                 <th>Nilai</th>
                                 <th>Matrix</th>
@@ -174,7 +174,7 @@
 
                             // console.log(data);
                             let NilaiAkhir = data.reduce(function(a, b) {
-                                return intVal(a) + (intVal(b.bobot) / 100 * intVal(b.nilai));
+                                return intVal(a) + (intVal(b.bobot)  * (intVal(b.nilai) / intVal(b.maxnilai)));
                             }, 0);
 
                             // Update footer

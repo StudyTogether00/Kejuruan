@@ -19,8 +19,8 @@
                                 </tr>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Mapel</th>
-                                    <th>Nama Mapel</th>
+                                    <th>Kode Kriteria</th>
+                                    <th>Nama Kriteria</th>
                                     <th class="disabled-sorting text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -35,8 +35,8 @@
     <x-modal-form id="AddEditData" title="labelAddEdit">
         <div class="modal-body">
             <div class="row">
-                <x-form-group class="col-sm-12 col-md-12" label="Kode Mata Pelajaran" name="kd_matapelajaran" required />
-                <x-form-group class="col-sm-12 col-md-12" label="Nama Mata Pelajaran" name="nama_matapelajaran" required />
+                <x-form-group class="col-sm-12 col-md-12" label="Kode Kriteria" name="kd_matapelajaran" required />
+                <x-form-group class="col-sm-12 col-md-12" label="Nama Kriteria" name="nama_matapelajaran" required />
             </div>
         </div>
         <div class="modal-footer">
@@ -87,9 +87,9 @@
                     "className": "text-center",
                     render: function(data, type, row, meta) {
                         let html = "";
-                        html += btnDataTable("Edit Mapel", "btn-outline-primary edit",
+                        html += btnDataTable("Edit Kriteria", "btn-outline-primary edit",
                             "fa fa-edit btn-outline-primary", true);
-                        html += btnDataTable("Delete Mapel", "btn-outline-danger delete",
+                        html += btnDataTable("Delete ", "btn-outline-danger delete",
                             "fa fa-trash btn-outline-danger");
                         return html;
                     }
@@ -105,7 +105,7 @@
                     processData = {
                         kd_matapelajaran: data.kd_matapelajaran
                     };
-                    $("#FDelData p").html("Are you sure to delete data code Mata Pelajaran <b>" + data
+                    $("#FDelData p").html("Are you sure to delete data code Kriteria <b>" + data
                         .kd_matapelajaran +
                         "</b> ?");
                     ShowModal("MDelData");
@@ -121,7 +121,7 @@
 
         ShowData = function(act = "Add", data = "") {
             let form_id = "#FAddEditData";
-            $("h4[labelAddEdit]").text(act + " Data Mata Pelajaran");
+            $("h4[labelAddEdit]").text(act + " Data Kriteria");
             processData = {
                 action: act,
                 kd_matapelajaran: (act == "Add" ? "" : data.kd_matapelajaran),
