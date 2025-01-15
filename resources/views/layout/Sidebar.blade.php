@@ -2,14 +2,14 @@
     $session = Session::get('data.data');
     $listmenu = $session['role'] == 'admin' ? config('sidebar.menu') : config('sidebar.user');
 @endphp
-<div class="sidebar" data-color="rose" data-background-color="black">
+<div class="sidebar" data-color="rose" data-background-color="black" data-image="assets/img/sidebar-1.jpg">
     <div class="logo">
         <a href="/" class="simple-text logo-mini">PS</a>
         <a href="/" class="simple-text logo-normal">Penjurusan SAW</a>
     </div>
     <div class="sidebar-wrapper">
         <div class="user">
-            <div class="photo"></div>
+            <div class="photo"><img src="assets/img/faces/novelia.jpeg" /></div>
             <div class="user-info">
                 <a data-toggle="collapse" href="#collapseExample" class="username">
                     <span>
