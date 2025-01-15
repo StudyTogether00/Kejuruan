@@ -82,7 +82,7 @@
                     "data": null,
                     "className": "text-center",
                     "render": function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
+                        return meta.row /*+ meta.settings._iDisplayStart*/ + 1;
                     }
                 }, {
                     "data": "nisn",
@@ -145,7 +145,8 @@
                 nama_siswa: (act == "Add" ? "" : data.nama_siswa),
                 jenis_kelamin: (act == "Add" ? "" : data.jenis_kelamin)
             };
-            act == "Add" ? $(form_id + " [name='nisn']").removeAttr('disabled') : $(form_id + " [name='nisn']").attr('disabled', true);
+            act == "Add" ? $(form_id + " [name='nisn']").removeAttr('disabled') : $(form_id + " [name='nisn']").attr(
+                'disabled', true);
             $(form_id + " [name='nisn']").val(processData.nisn).change();
             $(form_id + " [name='nama_siswa']").val(processData.nama_siswa).change();
             $(form_id + " [name='jenis_kelamin']").val(processData.jenis_kelamin).change();

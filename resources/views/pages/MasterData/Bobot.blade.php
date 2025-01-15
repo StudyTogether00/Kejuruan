@@ -70,8 +70,7 @@
     <x-modal-form id="AddEditDataDetail" title="labelAddEdit">
         <div class="modal-body">
             <div class="row">
-                <x-form-group type="select" class="col-sm-12 col-md-12" label="Kriteria" name="kd_matapelajaran"
-                    required>
+                <x-form-group type="select" class="col-sm-12 col-md-12" label="Kriteria" name="kd_matapelajaran" required>
                     <option value="" disabled>--Choose Kriteria--</option>
                 </x-form-group>
                 <x-form-group class="col-sm-12 col-md-12" label="Bobot" name="bobot" required />
@@ -118,7 +117,7 @@
                     "data": null,
                     "className": "text-center",
                     "render": function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
+                        return meta.row /*+ meta.settings._iDisplayStart*/ + 1;
                     }
                 }, {
                     "data": "nama_jurusan",
