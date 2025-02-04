@@ -13,8 +13,6 @@
                                     <th colspan="6">
                                         <x-button type="button" class="btn-outline-info" icon="fa fa-refresh"
                                             label="Refresh" onclick="Refresh()" />
-                                        <x-button type="button" class="btn-outline-success" icon="fa fa-download"
-                                            label="Download" onclick="Download()" />
                                     </th>
                                 </tr>
                                 <tr>
@@ -178,7 +176,7 @@
                                 },
                                 0);
                             let NilaiMatrix = data.reduce(function(a, b) {
-                                    return intVal(a) + (intVal(b.bobot) / 100 *
+                                    return intVal(a) + (intVal(b.bobot) *
                                         (intVal(b.nilai) / intVal(b.maxnilai)));
                                 },
                                 0);

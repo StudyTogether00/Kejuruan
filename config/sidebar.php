@@ -11,22 +11,22 @@ return [
             "title" => "Master Data",
             "sub_menu" => [
                 [
-                    "icon" => '<span class="sidebar-mini">J</span>',
+                    "icon" => '<span class="sidebar-mini">DJ</span>',
                     "title" => "Data Jurusan",
                     "url" => "MasterData/Jurusan",
                 ],
                 [
-                    "icon" => '<span class="sidebar-mini">S</span>',
+                    "icon" => '<span class="sidebar-mini">DS</span>',
                     "title" => "Data Siswa",
                     "url" => "MasterData/Siswa",
                 ],
                 [
-                    "icon" => '<span class="sidebar-mini">M</span>',
+                    "icon" => '<span class="sidebar-mini">DK</span>',
                     "title" => "Data Kriteria",
                     "url" => "MasterData/MataPelajaran",
                 ],
                 [
-                    "icon" => '<span class="sidebar-mini">B</span>',
+                    "icon" => '<span class="sidebar-mini">DB</span>',
                     "title" => "Data Bobot",
                     "url" => "MasterData/Bobot",
                 ],

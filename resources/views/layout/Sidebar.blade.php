@@ -9,7 +9,7 @@
     </div>
     <div class="sidebar-wrapper">
         <div class="user">
-            <div class="photo"><img src="assets/img/faces/novelia.jpeg" /></div>
+            <div class="photo"></div>
             <div class="user-info">
                 <a data-toggle="collapse" href="#collapseExample" class="username">
                     <span>
