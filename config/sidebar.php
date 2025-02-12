@@ -38,15 +38,9 @@ return [
             "url" => "Process/Nilai",
         ],
         [
-            "icon" => '<i class="material-icons">print</i>',
-            "title" => "Report",
-            "sub_menu" => [
-                [
-                    "icon" => '<span class="sidebar-mini">N</span>',
+            "icon" => '<i class="material-icons">insert_chart</i>',
                     "title" => "Normalisasi",
                     "url" => "Report/Normalisasi",
-                ],
-            ],
         ],
     ],
     "user" => [
@@ -56,15 +50,10 @@ return [
             "url" => "/",
         ],
         [
-            "icon" => '<i class="material-icons">print</i>',
-            "title" => "Report",
-            "sub_menu" => [
-                [
-                    "icon" => '<span class="sidebar-mini">N</span>',
-                    "title" => "Normalisasi",
-                    "url" => "Report/Normalisasi",
-                ],
-            ],
+            "icon" => '<i class="material-icons">insert_chart</i>',
+            "title" => "Normalisasi",
+            "url" => "Report/Normalisasi",
+
         ],
     ],
 ];
