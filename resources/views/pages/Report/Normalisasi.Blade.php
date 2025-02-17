@@ -51,6 +51,7 @@
                                 </thead>
                             </table>
                         </div>
+                        <label id="hasil"></label>
                     @endif
                 </div>
             </div>
@@ -173,18 +174,48 @@
 
         DtRekap = function() {
             if (!$.fn.DataTable.isDataTable("#tableRekap")) {
-                let dtu = {
-                    id: "#tableRekap",
-                    data: {
-                        url: $apiUrl + "Report/Normalisasi/NilaiMatrix",
-                        param: function() {
-                            var d = {};
-                            d.tahun = tahun;
-                            d.nisn = nisn;
-                            return JSON.stringify(d);
+                @if ($session['role'] == 'admin')
+                    let dtu = {
+                        id: "#tableRekap",
+                        data: {
+                            url: $apiUrl + "Report/Normalisasi/NilaiMatrix",
+                            param: function() {
+                                var d = {};
+                                d.tahun = tahun;
+                                d.nisn = nisn;
+                                return JSON.stringify(d);
+                            }
                         }
-                    }
-                };
+                    };
+                @else
+                    let dtu = {
+                        id: "#tableRekap",
+                        data: {
+                            url: $apiUrl + "Report/Normalisasi/NilaiMatrix",
+                            param: function() {
+                                var d = {};
+                                d.tahun = tahun;
+                                d.nisn = nisn;
+                                return JSON.stringify(d);
+                            }
+                        },
+                        config: {
+                            footerCallback: function(row, data, start, end, display) {
+                                let api = this.api();
+                                // Remove the formatting to get integer data for summation
+                                let intVal = function(i) {
+                                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 :
+                                        typeof i === 'number' ? i : 0;
+                                };
+                                console.log(data);
+
+                                let nm_jurusan = data.length > 0 ? data[0].nama_jurusan : "";
+                                $("#hasil").text("Jurusan yang di rekomendasikan adalah " + nm_jurusan +
+                                    " karena nilai lebih besar dari yang lain");
+                            }
+                        }
+                    };
+                @endif
                 table2 = PDataTables(dtu, [{
                     "data": null,
                     "className": "text-center",
