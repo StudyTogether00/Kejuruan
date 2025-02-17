@@ -1,44 +1,89 @@
 @extends('layout.Layout')
+@php
+    $session = Session::get('data.data');
+    $userid = $session['role'] == 'admin' ? '' : $session['userid'];
+    $fullname = $session['role'] == 'admin' ? '' : $session['fullname'];
+@endphp
 
 @section('content')
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="material-datatables">
-                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0"
+                    @if ($session['role'] == 'admin')
+                        <div class="material-datatables">
+                            <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0"
+                                width="100%" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6">
+                                            <x-button type="button" class="btn-outline-info" icon="fa fa-refresh"
+                                                label="Refresh" onclick="Refresh()" />
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">NIS/NISN</th>
+                                        <th class="text-center">Nama Siswa</th>
+                                        <th class="text-center">Hasil</th>
+                                        <th class="disabled-sorting text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    @else
+                        <div class="material-datatables">
+                            <table id="tableRekap" class="table table-striped table-no-bordered table-hover" cellspacing="0"
+                                width="100%" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6">
+                                            <x-button type="button" class="btn-outline-info" icon="fa fa-refresh"
+                                                label="Refresh" onclick="DtRekap()" />
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Jurusan</th>
+                                        <th>Nilai Akhir</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if ($session['role'] == 'admin')
+        {{-- Table Rekap Modal --}}
+        <x-modal-form id="RekapData" title="labelRekap" class="modal-lg">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="material-datatables col-sm-12">
+                        <table id="tableRekap" class="table table-striped table-no-bordered table-hover" cellspacing="0"
                             width="100%" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th colspan="6">
-                                        <x-button type="button" class="btn-outline-info" icon="fa fa-refresh"
-                                            label="Refresh" onclick="Refresh()" />
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th class="text-center">No</th>
-                                    <th class="text-center">NIS/NISN</th>
-                                    <th class="text-center">Nama Siswa</th>
-                                    <th class="text-center">Hasil</th>
-                                    <th class="disabled-sorting text-center">Actions</th>
+                                    <th>No</th>
+                                    <th>Jurusan</th>
+                                    <th>Nilai Akhir</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </x-modal-form>
+    @endif
+
     {{-- Add Edit Modal --}}
     <x-modal-form id="AddEditData" title="labelAddEdit" class="modal-lg">
         <div class="modal-body">
             <div class="row">
-                <div class="col-sm-6">
-                    <x-form-group type="select" class="col-sm-12 col-md-12" label="Jurusan" name="kd_jurusan"
-                        onchange="LoadNilai()">
-                        <option value="" disabled>--Choose Jurusan--</option>
-                    </x-form-group>
-                </div>
                 <div class="material-datatables col-sm-12">
                     <table id="tableMaple" class="table table-striped table-no-bordered table-hover" cellspacing="0"
                         width="100%" style="width:100%">
@@ -68,10 +113,11 @@
 @push('scripts')
     <script type="text/javascript">
         let table, id_tbl = "#datatables";
-        let table1, tridx = 0,
+        let table1, table2, tridx = 0,
             tahun = "2024";
-        let nama_siswa = "",
-            nisn = "",
+        let nama_siswa = "{{ $fullname }}",
+            nisn = "{{ $userid }}",
+            kd_jurusan = "",
             dtDetail = {};
         let processData = {};
 
@@ -114,10 +160,64 @@
                 table.on('click', '.view', function() {
                     $tr = $(this).closest('tr');
                     var data = table.row($tr).data();
-                    ShowData("Edit", data);
+                    nama_siswa = data.nama_siswa;
+                    nisn = data.nisn;
+                    $("#MRekapData h4[labelRekap]").text("Data Nilai Siswa " + nama_siswa);
+                    DtRekap();
+                    ShowModal("MRekapData");
                 });
             } else {
                 table.ajax.reload();
+            }
+        }
+
+        DtRekap = function() {
+            if (!$.fn.DataTable.isDataTable("#tableRekap")) {
+                let dtu = {
+                    id: "#tableRekap",
+                    data: {
+                        url: $apiUrl + "Report/Normalisasi/NilaiMatrix",
+                        param: function() {
+                            var d = {};
+                            d.tahun = tahun;
+                            d.nisn = nisn;
+                            return JSON.stringify(d);
+                        }
+                    }
+                };
+                table2 = PDataTables(dtu, [{
+                    "data": null,
+                    "className": "text-center",
+                    "render": function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                }, {
+                    "data": "nama_jurusan",
+                }, {
+                    "data": "nilai_akhir",
+                }, {
+                    "data": null,
+                    "orderable": false,
+                    "className": "text-center",
+                    render: function(data, type, row, meta) {
+                        let html = "";
+                        html += btnDataTable("View Detail Nilai", "btn-outline-primary view",
+                            "fa fa-eye btn-outline-primary", true);
+                        return html;
+                    }
+                }]);
+                table2.on('click', '.view', function() {
+                    $tr = $(this).closest('tr');
+                    var data = table2.row($tr).data();
+                    let form_id = "#FAddEditData";
+                    kd_jurusan = data.kd_jurusan;
+                    $("#MAddEditData h4[labelAddEdit]").text("Detail Nilai Siswa " + nama_siswa +
+                        " untuk Jurusan " + data.nama_jurusan);
+                    LoadNilai();
+                    ShowModal("MAddEditData");
+                });
+            } else {
+                table2.ajax.reload();
             }
         }
 
@@ -138,15 +238,6 @@
             });
         }
 
-        ShowData = function(act = "Add", data = "") {
-            let form_id = "#FAddEditData";
-            nama_siswa = data.nama_siswa;
-            nisn = data.nisn;
-            $("#MAddEditData h4[labelAddEdit]").text("Nilai Siswa " + nama_siswa);
-            LoadNilai();
-            ShowModal("MAddEditData");
-        }
-
         LoadNilai = function() {
             if (!$.fn.DataTable.isDataTable("#tableMaple")) {
                 let dtu = {
@@ -157,7 +248,7 @@
                             var d = {};
                             d.tahun = tahun;
                             d.nisn = nisn;
-                            d.kd_jurusan = $("[name='kd_jurusan']").val();
+                            d.kd_jurusan = kd_jurusan;
                             return JSON.stringify(d);
                         }
                     },
@@ -170,7 +261,6 @@
                                     typeof i === 'number' ? i : 0;
                             };
 
-                            console.log(data);
                             let NilaiAkhir = data.reduce(function(a, b) {
                                     return intVal(a) + (intVal(b.bobot) / 100 * intVal(b.nilai));
                                 },
@@ -225,7 +315,11 @@
         }
 
         $(document).ready(function() {
-            Refresh();
+            @if ($session['role'] == 'admin')
+                Refresh();
+            @else
+                DtRekap();
+            @endif
             DtJurusan();
         });
     </script>

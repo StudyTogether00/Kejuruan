@@ -101,6 +101,40 @@ class NormalisasiController extends BaseController
         return $this->SendResponse();
     }
 
+    public function NilaiMatrix(Request $request)
+    {
+        try {
+            $validation = Validator::make($request->all(), ["tahun" => "required", "nisn" => "required"]);
+            if ($validation->fails()) {
+                $this->error = $validation->errors();
+                throw new \Exception(BaseService::MessageCheckData(), 400);
+            }
+
+            // Data Nilai
+            $dtnilai = NilaiService::DataDetail($request->tahun);
+            $dtnilai = BobotService::Join($dtnilai, "", "detail_nilai.kd_matapelajaran", "b", "join", "v3");
+            $dtnilai = $dtnilai->joinSub(NilaiService::NilaiMinMax(), "mt", function ($q) {
+                $q->on("mt.tahun", "=", "detail_nilai.tahun");
+                $q->on("mt.kd_matapelajaran", "=", "detail_nilai.kd_matapelajaran");
+            });
+            $dtnilai = $dtnilai->where("detail_nilai.nisn", $request->nisn);
+            $dtnilai = $dtnilai->select("detail_nilai.tahun", "detail_nilai.nisn", "b.kd_jurusan");
+            $dtnilai = $dtnilai->selectRaw("SUM(detail_nilai.nilai * b.bobot/100) AS nilai_akhir"); // "SUM(detail_nilai.nilai/mt.maxnilai * b.bobot) AS nilai_akhir"
+            $dtnilai = $dtnilai->groupBy("detail_nilai.tahun", "detail_nilai.nisn", "b.kd_jurusan");
+
+            $data = JurusanService::Data();
+            $data = $data->joinSub($dtnilai, "n", function ($q) {
+                $q->on("n.kd_jurusan", "=", "jurusan.kd_jurusan");
+            });
+            $data = $data->select("jurusan.kd_jurusan", "jurusan.nama_jurusan", "n.nisn", "n.nilai_akhir");
+            $data = $data->orderBy("n.nilai_akhir", "DESC")->get();
+            $this->respon = BaseService::ResponseSuccess(BaseService::MsgSuccess($this->pns, 1), $data);
+        } catch (\Throwable $th) {
+            $this->respon = BaseService::ResponseError($th->getMessage(), $this->error, $th->getCode());
+        }
+        return $this->SendResponse();
+    }
+
     public function DownloadReport(Request $request)
     {
         try {

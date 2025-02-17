@@ -84,4 +84,13 @@ class NilaiService
         });
         return $data;
     }
+
+    public static function NilaiMinMax()
+    {
+        $data = self::DataDetail();
+        $data = $data->select("tahun", "kd_matapelajaran");
+        $data = $data->selectRaw("MIN(nilai) AS minnilai, MAX(nilai) AS maxnilai");
+        $data = $data->groupBy("tahun", "kd_matapelajaran");
+        return $data;
+    }
 }

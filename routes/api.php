@@ -54,6 +54,7 @@ Route::prefix('Process')->group(function () {
 Route::prefix('Report')->group(function () {
     Route::prefix('Normalisasi')->group(function () {
         Route::post('Keputusan', [NormalisasiController::class, "DataKeputusan"]);
+        Route::post('NilaiMatrix', [NormalisasiController::class, "NilaiMatrix"]);
         Route::post('NilaiPerNIS', [NormalisasiController::class, "DataNilai"]);
     });
 });
